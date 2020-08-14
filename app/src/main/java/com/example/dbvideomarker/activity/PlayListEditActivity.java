@@ -3,7 +3,9 @@ package com.example.dbvideomarker.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -20,12 +22,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dbvideomarker.R;
 import com.example.dbvideomarker.adapter.PlayListEditAdapter;
 import com.example.dbvideomarker.adapter.listener.OnItemClickListener;
+import com.example.dbvideomarker.adapter.util.Callback;
 import com.example.dbvideomarker.adapter.util.ViewCase;
 import com.example.dbvideomarker.database.dao.PlayListDao;
 import com.example.dbvideomarker.database.entitiy.PlRel;
@@ -33,17 +37,22 @@ import com.example.dbvideomarker.database.entitiy.PlRelVideo;
 import com.example.dbvideomarker.database.entitiy.PlayList;
 import com.example.dbvideomarker.ui.notifications.NotificationsViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayListEditActivity extends AppCompatActivity implements OnItemClickListener {
+public class PlayListEditActivity extends AppCompatActivity implements OnItemClickListener, PlayListEditAdapter.OnStartDragListener {
 
     private PlayListEditViewModel playListEditViewModel;
     TextView PlayListName, PlayListId;
     public int SELECT_REQUEST_CODE = 1001;
-    private List<Integer> resultList;
+    private List<PlRelVideo> resultList = new ArrayList<>();
     private int pid;
+    ItemTouchHelper itemTouchHelper;
+    PlayListEditAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,10 +84,12 @@ public class PlayListEditActivity extends AppCompatActivity implements OnItemCli
         playListId.setText(""+pid); //setText 에서 int형 파라미터는 리소스 id 값이지 그냥 int값이 아님. String 형태로 바꿔서 출력해야함 + setText는 charsequance 자료형임
 
         RecyclerView recyclerView = findViewById(R.id.rv_PlaylistEdit);
-        PlayListEditAdapter adapter = new PlayListEditAdapter(this, this);
+        adapter = new PlayListEditAdapter(this, this, this);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),new LinearLayoutManager(this).getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
-
+        Callback callback = new Callback(adapter);
+        itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
 
 
@@ -92,7 +103,34 @@ public class PlayListEditActivity extends AppCompatActivity implements OnItemCli
             @Override
             public void onChanged(List<PlRelVideo> plRels) {
                 //Update the cached copy of the words in the adapter.
-                adapter.setPlRels(plRels);
+                resultList = getStringArrayList(""+pid);
+
+                if(resultList == null) {
+                    setStringArrayList(""+pid, plRels);
+                    adapter.setPlRels(plRels);
+                } else {
+                    if(resultList.size() < plRels.size()) {
+                        for(int i = 0; i < plRels.size(); i++) {
+                            if (!resultList.contains(plRels.get(i))) {
+                                resultList.add(plRels.get(i));
+                                setStringArrayList(""+pid, resultList);
+                                adapter.setPlRels(resultList);
+                            }
+                        }
+                    } else if(resultList.size() > plRels.size()){
+                        for(int i = 0; i < resultList.size(); i++) {
+                            if (!plRels.contains(resultList.get(i))) {
+                                resultList.remove(i);
+                                setStringArrayList(""+pid, resultList);
+                                adapter.setPlRels(resultList);
+                            }
+                        }
+                    } else {
+                        setStringArrayList(""+pid, resultList);
+                        adapter.setPlRels(resultList);
+                    }
+                }
+
             }
         });
 
@@ -161,5 +199,42 @@ public class PlayListEditActivity extends AppCompatActivity implements OnItemCli
     @Override
     public void clickItem(int pid) {
 
+    }
+
+    @Override
+    public void onStartDrag(PlayListEditAdapter.PLEViewHolder holder) {
+        itemTouchHelper.startDrag(holder);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        setStringArrayList(""+pid, adapter.plRelList);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        setStringArrayList(""+pid, adapter.plRelList);
+    }
+
+    public void setStringArrayList(String key, List<PlRelVideo> valueList) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = pref.edit();
+        //Gson build gradle에 추가해야함
+        Gson gson = new Gson();
+        String json = gson.toJson(valueList);
+        editor.putString(key, json);
+        editor.commit();
+    }
+
+    public List<PlRelVideo> getStringArrayList(String key) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        Gson gson = new Gson();
+        String json = pref.getString(key, null);
+        Type type = new TypeToken<List<PlRelVideo>>() {
+        }.getType();
+        List<PlRelVideo> items = gson.fromJson(json, type);
+        return items;
     }
 }

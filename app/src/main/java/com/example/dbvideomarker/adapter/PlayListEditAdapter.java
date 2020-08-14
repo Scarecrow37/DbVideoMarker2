@@ -2,30 +2,41 @@ package com.example.dbvideomarker.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.MotionEventCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dbvideomarker.R;
 import com.example.dbvideomarker.adapter.listener.OnItemClickListener;
+import com.example.dbvideomarker.adapter.util.Callback;
 import com.example.dbvideomarker.database.entitiy.PlRel;
 import com.example.dbvideomarker.database.entitiy.PlRelVideo;
 import com.example.dbvideomarker.database.entitiy.Video;
 
+import java.util.Collections;
 import java.util.List;
 
-public class PlayListEditAdapter extends RecyclerView.Adapter<PlayListEditAdapter.PLEViewHolder> {
+public class PlayListEditAdapter extends RecyclerView.Adapter<PlayListEditAdapter.PLEViewHolder> implements Callback.OnItemMoveListener{
 
+    private final OnStartDragListener onStartDragListener;
     private OnItemClickListener onItemClickListener;
-    private List<PlRelVideo> plRelList;
+    public List<PlRelVideo> plRelList;
     private LayoutInflater mInflater;
 
-    public PlayListEditAdapter(Context context, OnItemClickListener onItemClickListener) {
+    public PlayListEditAdapter(Context context, OnItemClickListener onItemClickListener, OnStartDragListener onStartDragListener) {
         mInflater = LayoutInflater.from(context);
         this.onItemClickListener = onItemClickListener;
+        this.onStartDragListener = onStartDragListener;
+    }
+
+    public interface OnStartDragListener {
+        void onStartDrag(PLEViewHolder holder);
     }
 
     @NonNull
@@ -58,6 +69,16 @@ public class PlayListEditAdapter extends RecyclerView.Adapter<PlayListEditAdapte
                     onItemClickListener.clickItem(pid);
                 }
             });
+
+            holder.imageView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if(MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                        onStartDragListener.onStartDrag(holder);
+                    }
+                    return false;
+                }
+            });
         }
     }
 
@@ -73,11 +94,18 @@ public class PlayListEditAdapter extends RecyclerView.Adapter<PlayListEditAdapte
         notifyDataSetChanged();
     }
 
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        Collections.swap(plRelList, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
     public class PLEViewHolder extends RecyclerView.ViewHolder {
         private View view;
         private TextView pid;
         private TextView vname;
         private TextView vid;
+        private ImageView imageView;
 
         public PLEViewHolder(View view) {
             super(view);
@@ -85,6 +113,7 @@ public class PlayListEditAdapter extends RecyclerView.Adapter<PlayListEditAdapte
             pid = view.findViewById(R.id.plrel_plid);
             vname = view.findViewById(R.id.plrel_vname);
             vid = view.findViewById(R.id.plrel_vid);
+            imageView = view.findViewById(R.id.dragImage);
         }
 
     }

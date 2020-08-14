@@ -1,5 +1,6 @@
 package com.example.dbvideomarker.database.entitiy;
 
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 
 import com.google.android.material.circularreveal.CircularRevealHelper;
@@ -38,6 +39,17 @@ public class PlRelVideo{
     public void setPv_vname(String pv_vname) {
         this.pv_vname = pv_vname;
     }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj instanceof PlRelVideo) {
+            PlRelVideo plRelVideo = (PlRelVideo) obj;
+            return (pv_vid == plRelVideo.pv_vid);
+        }
+        return false;
+    }
+
+
 }
 
 

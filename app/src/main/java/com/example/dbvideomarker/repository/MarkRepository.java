@@ -25,6 +25,8 @@ public class MarkRepository {
         allMark = markDao.findAllMark();
     }
 
+    public LiveData<List<Mark>> sortAllMark(int sort) { return markDao.sortAllMark(sort); }
+
     public LiveData<List<Mark>> getAllMark() { return allMark; }
 
     public LiveData<List<Mark>> getSearchMark(String mMemo) {
