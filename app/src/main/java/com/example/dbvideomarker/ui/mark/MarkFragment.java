@@ -64,15 +64,6 @@ public class MarkFragment extends Fragment implements OnItemClickListener, OnIte
         recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
         recyclerView.setAdapter(adapter);
 
-        Button buttonSearch = rootv.findViewById(R.id.btn_Search);
-        buttonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Intent intentSearch = new Intent(getContext(), SearchActivity.class);
-                //getContext().startActivity(intentSearch);
-            }
-        });
-
         Button buttonSortDialog = rootv.findViewById(R.id.mark_sort);
         buttonSortDialog.setOnClickListener(new View.OnClickListener() {
             @Override

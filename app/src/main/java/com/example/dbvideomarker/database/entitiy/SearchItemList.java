@@ -1,4 +1,4 @@
-package com.example.dbvideomarker.ui.Search;
+package com.example.dbvideomarker.database.entitiy;
 
 import android.widget.ImageView;
 

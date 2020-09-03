@@ -8,9 +8,9 @@ import android.widget.ExpandableListView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dbvideomarker.R;
-import com.example.dbvideomarker.adapter.viewholder.SearchAdapter;
-import com.example.dbvideomarker.ui.Search.SearchGroupList;
-import com.example.dbvideomarker.ui.Search.SearchItemList;
+import com.example.dbvideomarker.adapter.SearchAdapter;
+import com.example.dbvideomarker.database.entitiy.SearchGroupList;
+import com.example.dbvideomarker.database.entitiy.SearchItemList;
 
 import java.util.ArrayList;
 

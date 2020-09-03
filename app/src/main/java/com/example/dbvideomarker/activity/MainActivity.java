@@ -1,9 +1,11 @@
 package com.example.dbvideomarker.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -72,25 +74,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+//        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-        /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
-
-        searchView.setQueryHint("검색어를 입력하세요");
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(getApplicationContext(), "검색을 완료했습니다.", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                Toast.makeText(getApplicationContext(), "입력중입니다.", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
+//        searchView.setMaxWidth(Integer.MAX_VALUE);
+//        /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
+//
+//        searchView.setQueryHint("검색어를 입력하세요");
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                Toast.makeText(getApplicationContext(), "검색을 완료했습니다.", Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                Toast.makeText(getApplicationContext(), "입력중입니다.", Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//        });
         return true;
     }
 
@@ -105,6 +107,10 @@ public class MainActivity extends AppCompatActivity {
 //                Intent intent = new Intent(this, SettingActivity.class);
 //                //액티비티 시작!
 //                startActivity(intent);
+                break;
+            case R.id.menu_search:
+                Intent intentSearch = new Intent(getApplicationContext(), SearchActivity.class);
+                startActivity(intentSearch);
                 break;
         }
         return true;

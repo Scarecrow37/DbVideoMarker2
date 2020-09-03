@@ -74,15 +74,6 @@ public class PlaylistFragment extends Fragment implements OnItemClickListener {
 
             }
         });
-
-        Button buttonSearch = rv.findViewById(R.id.btn_Search);
-        buttonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentSearch = new Intent(getContext(), SearchActivity.class);
-                getContext().startActivity(intentSearch);
-            }
-        });
         return rv;
     }
 

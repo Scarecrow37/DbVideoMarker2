@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dbvideomarker.R;
-import com.example.dbvideomarker.ui.Search.SearchGroupList;
-import com.example.dbvideomarker.ui.Search.SearchItemList;
+import com.example.dbvideomarker.database.entitiy.SearchGroupList;
+import com.example.dbvideomarker.database.entitiy.SearchItemList;
 
 import java.util.ArrayList;
 
