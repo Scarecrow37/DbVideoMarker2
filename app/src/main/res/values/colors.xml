@@ -5,7 +5,16 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="colorBG">#373737</color>
     <color name="colorToolbar">#2C2C2C</color>
-    <color name="colorToolbarEx">#212121</color>
     <color name="colorTablayout">#494949</color>
+    <color name="colorToolbarEx">#212121</color>
     <color name="colorText">#FFFFFF</color>
+    <color name="default_playback_background">#3D000000</color>
+
+    <color name="dark_mode_icon_color_single_tone">#99000000</color>
+    <color name="dark_mode_icon_color_dual_tone_background">#3d000000</color>
+    <color name="dark_mode_icon_color_dual_tone_fill">#7a000000</color>
+
+    <color name="light_mode_icon_color_single_tone">#ffffff</color>
+    <color name="light_mode_icon_color_dual_tone_background">#4dffffff</color>
+    <color name="light_mode_icon_color_dual_tone_fill">#ffffff</color>
 </resources>
