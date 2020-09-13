@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/addPlayList"
-        android:title="재생목록 추가"/>
     <item android:id="@+id/deletePlayList"
         android:title="재생목록 삭제"/>
     <item android:id="@+id/modifyPlayList"

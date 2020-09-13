@@ -87,4 +87,21 @@ public class MarkRepository {
             }
         }.execute(id);
     }
+
+    public void updateMark(int id, String name) {
+        new AsyncTask<Integer, Void, Integer>() {
+            @Override
+            protected Integer doInBackground(Integer... integers) {
+                if(markDao == null)
+                    return -1;
+                return markDao.updateMark(integers[0], name);
+            }
+
+            @Override
+            protected void onPostExecute(Integer integer) {
+                super.onPostExecute(integer);
+                Log.d(TAG, "updateMark : " + integer);
+            }
+        }.execute(id);
+    }
 }

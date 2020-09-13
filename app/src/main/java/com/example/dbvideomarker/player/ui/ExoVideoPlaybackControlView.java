@@ -35,6 +35,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
 import com.example.dbvideomarker.R;
+import com.example.dbvideomarker.adapter.MarkAdapter;
 import com.example.dbvideomarker.player.PlayerActivity;
 import com.example.dbvideomarker.player.gesture.OnVideoGestureChangeListener;
 import com.example.dbvideomarker.player.gesture.VideoGesture;
@@ -182,22 +183,13 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private final TextView exoPlayerVideoName;
     private final TextView exoPlayerVideoNameLandscape;
 
-    private final TextView exoPlayerCurrentQualityLandscape;
-
-    private final ViewGroup topCustomView;
-    private final ViewGroup topCustomViewLandscape;
-    private final ViewGroup bottomCustomViewLandscape;
-
     private final TextView centerError;
     private final ProgressBar loadingBar;
 
     private final View back;
     private final View backLandscape;
 
-    private final View exoPlayerAddMark;
-    private final View exoPlayerAddMarkLandscape;
-    private final View exoPlayerAddPlaylist;
-    private final View exoPlayerAddPlaylistLandscape;
+    private final View exoPlayerMarkLandscape;
 
     private boolean portrait = true;
 
@@ -209,6 +201,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
     private boolean isHls;
 
     private int displayMode = CONTROLLER_MODE_ALL;
+
 
     private VideoViewAccessor videoViewAccessor;
     private VideoGesture videoGesture;
@@ -389,24 +382,9 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             exoPlayerVideoNameLandscape.setOnClickListener(componentListener);
         }
 
-        exoPlayerAddMark = findViewById(R.id.exo_player_controller_add_mark);
-        if(exoPlayerAddMark != null) {
-            exoPlayerAddMark.setOnClickListener(componentListener);
-        }
-
-        exoPlayerAddMarkLandscape = findViewById(R.id.exo_player_controller_add_mark_landscape);
-        if(exoPlayerAddMarkLandscape != null) {
-            exoPlayerAddMarkLandscape.setOnClickListener(componentListener);
-        }
-
-        exoPlayerAddPlaylist = findViewById(R.id.exo_player_controller_add_playlist);
-        if(exoPlayerAddPlaylist != null) {
-            exoPlayerAddPlaylist.setOnClickListener(componentListener);
-        }
-
-        exoPlayerAddPlaylistLandscape = findViewById(R.id.exo_player_controller_add_playlist_landscape);
-        if(exoPlayerAddPlaylistLandscape != null) {
-            exoPlayerAddPlaylistLandscape.setOnClickListener(componentListener);
+        exoPlayerMarkLandscape = findViewById(R.id.exo_player_controller_mark_landscape);
+        if(exoPlayerMarkLandscape != null) {
+            exoPlayerMarkLandscape.setOnClickListener(componentListener);
         }
 
         back = findViewById(R.id.exo_player_controller_back);
@@ -423,15 +401,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             setupVideoGesture(enableGesture);
         }
 
-        exoPlayerCurrentQualityLandscape = findViewById(R.id.exo_player_current_quality_landscape);
-        if (exoPlayerCurrentQualityLandscape != null) {
-            exoPlayerCurrentQualityLandscape.setOnClickListener(componentListener);
-        }
-
-
-        topCustomView = findViewById(R.id.exo_player_controller_top_custom_view);
-        topCustomViewLandscape = findViewById(R.id.exo_player_controller_top_custom_view_landscape);
-        bottomCustomViewLandscape = findViewById(R.id.exo_player_controller_bottom_custom_view_landscape);
 
         centerError = findViewById(R.id.exo_player_center_error);
         loadingBar = findViewById(R.id.exo_player_loading);
@@ -906,7 +875,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
         seekTo(seekPositionMs);
     }
 
-    private void seekTo(long positionMs) {
+    public void seekTo(long positionMs) {
         seekTo(player.getCurrentWindowIndex(), positionMs);
     }
 
@@ -941,15 +910,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             windowIndex = player.getCurrentWindowIndex();
         }
         seekTo(windowIndex, positionMs);
-    }
-
-    private void addMark(long position) {
-        playerActivity = new PlayerActivity();
-        playerActivity.addMark(position);
-    }
-
-    private void addPlaylist() {
-        Toast.makeText(getContext(), "재생목록 추가", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -1069,6 +1029,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
             exoPlayerControllerBottomLandscape.setVisibility(visibility);
         }
 
+
     }
 
     private synchronized void changeOrientation(@OnOrientationChangedListener.SensorOrientationType int orientation) {
@@ -1123,6 +1084,7 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
 
         videoViewAccessor.attachVideoView().setSystemUiVisibility(flag);
     }
+
 
 
     public void setVideoViewAccessor(VideoViewAccessor videoViewAccessor) {
@@ -1307,10 +1269,6 @@ public class ExoVideoPlaybackControlView extends FrameLayout {
                     }
                 } else if (centerInfoWrapper == view) {
                     playOrPause();
-                } else if (exoPlayerAddMark == view || exoPlayerAddMarkLandscape == view) {
-                    addMark(player.getCurrentPosition());
-                } else if (exoPlayerAddPlaylist == view || exoPlayerAddPlaylistLandscape == view) {
-                    addPlaylist();
                 }
             }
             hideAfterTimeout();

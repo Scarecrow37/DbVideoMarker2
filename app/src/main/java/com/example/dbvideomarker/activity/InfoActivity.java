@@ -5,17 +5,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.example.dbvideomarker.R;
-import com.example.dbvideomarker.database.entitiy.Media;
-import com.example.dbvideomarker.mediastore.MediaStoreLoader;
+import com.example.dbvideomarker.util.MediaStoreLoader;
 
 public class InfoActivity extends AppCompatActivity {
 
@@ -90,7 +87,8 @@ public class InfoActivity extends AppCompatActivity {
                 String changedTime = loader.getReadableDuration(millis);
                 String changedSize = loader.getReadableFileSize(size);
 
-                Glide.with(this).asBitmap().load(uri).into(iv1);
+                //Glide.with(this).asBitmap().load(uri).into(iv1);
+                iv1.setImageBitmap(loader.getThumbnail(path, 20000));
                 tv1.setText(name);
                 tv2.setText(changedTime);
                 tv3.setText(changedSize);

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,17 +31,17 @@ import com.example.dbvideomarker.listener.OnItemClickListener;
 import com.example.dbvideomarker.adapter.util.Callback;
 import com.example.dbvideomarker.database.entitiy.PlRel;
 import com.example.dbvideomarker.database.entitiy.PlayList;
+import com.example.dbvideomarker.listener.OnMarkClickListener;
+import com.example.dbvideomarker.player.PlayerActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayListEditActivity extends AppCompatActivity implements OnItemClickListener, PlayList_VideoAdapter.OnStartDragListener {
+public class PlayListEditActivity extends AppCompatActivity implements OnItemClickListener, OnMarkClickListener, PlayList_VideoAdapter.OnStartDragListener {
 
     private PlayListEditViewModel playListEditViewModel;
     private List<PlRelVideo> resultList = new ArrayList<>();
@@ -114,7 +113,9 @@ public class PlayListEditActivity extends AppCompatActivity implements OnItemCli
         fab_video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent videoIntent = new Intent(PlayListEditActivity.this, SelectVideoActivity.class);
+                Intent videoIntent = new Intent(PlayListEditActivity.this, SelectActivity.class);
+                videoIntent.putExtra("pid", pid);
+                videoIntent.putExtra("VIEW_TYPE", 2001);
                 startActivityForResult(videoIntent, SELECT_VIDEO_REQUEST_CODE);
             }
         });
@@ -122,7 +123,9 @@ public class PlayListEditActivity extends AppCompatActivity implements OnItemCli
         fab_mark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent markIntent = new Intent(PlayListEditActivity.this, SelectMarkActivity.class);
+                Intent markIntent = new Intent(PlayListEditActivity.this, SelectActivity.class);
+                markIntent.putExtra("pid", pid);
+                markIntent.putExtra("VIEW_TYPE", 2002);
                 startActivityForResult(markIntent, SELECT_MARK_REQUEST_CODE);
             }
         });
@@ -218,13 +221,21 @@ public class PlayListEditActivity extends AppCompatActivity implements OnItemCli
                     plRel.setMid(selectedMidList.get(i));
                     playListEditViewModel.insertPlRelation(plRel);
                 }
-
             }
         }
     }
 
     @Override
-    public void clickLongItem(View v, int id) {
+    public void clickItem(int id, String path) {
+        Intent playerIntent = new Intent(this, PlayerActivity.class);
+        playerIntent.putExtra("ContentID", id);
+        playerIntent.putExtra("Path", path);
+        playerIntent.putExtra("Start", 0L);
+        startActivity(playerIntent);
+    }
+
+    @Override
+    public void clickLongItem(View v, int id, String path) {
         PopupMenu popupMenu = new PopupMenu(this, v);
         MenuInflater inflater = popupMenu.getMenuInflater();
         Menu menu = popupMenu.getMenu();
@@ -245,17 +256,17 @@ public class PlayListEditActivity extends AppCompatActivity implements OnItemCli
     }
 
 
-
     @Override
-    public void clickItem(int pid) {}
-
-    @Override
-    public void clickMark(int id, long start) {
-
+    public void clickMark(int id, long start, String path) {
+        Intent playerIntent = new Intent(this, PlayerActivity.class);
+        playerIntent.putExtra("ContentID", id);
+        playerIntent.putExtra("Path", path);
+        playerIntent.putExtra("Start", start);
+        startActivity(playerIntent);
     }
 
     @Override
-    public void clickLongMark(View v, int id) {
+    public void clickLongMark(View v, int id, String path) {
         PopupMenu popupMenu = new PopupMenu(this, v);
         MenuInflater inflater = popupMenu.getMenuInflater();
         Menu menu = popupMenu.getMenu();

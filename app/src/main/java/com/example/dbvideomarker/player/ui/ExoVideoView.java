@@ -3,10 +3,14 @@ package com.example.dbvideomarker.player.ui;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SearchRecentSuggestionsProvider;
 import android.content.res.TypedArray;
 import android.media.AudioManager;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.SparseBooleanArray;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,8 +19,18 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.VideoView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.RequestManager;
 import com.example.dbvideomarker.R;
+import com.example.dbvideomarker.adapter.MarkAdapter;
+import com.example.dbvideomarker.adapter.util.ViewCase;
+import com.example.dbvideomarker.listener.OnItemClickListener;
+import com.example.dbvideomarker.listener.OnItemSelectedListener;
+import com.example.dbvideomarker.player.PlayerActivity;
 import com.example.dbvideomarker.player.media.ExoMediaSource;
 import com.example.dbvideomarker.player.media.MediaSourceCreator;
 import com.google.android.exoplayer2.C;
@@ -39,7 +53,7 @@ import static android.content.Context.AUDIO_SERVICE;
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControlView.VideoViewAccessor {
+public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControlView.VideoViewAccessor, OnItemClickListener, OnItemSelectedListener {
 
 
     private static final int SURFACE_TYPE_NONE = 0;
@@ -59,7 +73,9 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
     private boolean controllerAutoShow;
     private boolean controllerHideOnTouch;
     private boolean pausedFromPlayer = false;
-    private boolean enableMultiQuality = true;
+    private boolean markViewer = true;
+    private RequestManager mGlideRequestManager;
+    private PlayerActivity playerActivity;
 
     private final AudioManager audioManager;
     private AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
@@ -132,6 +148,7 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
                         controllerHideOnTouch);
                 controllerAutoShow = a.getBoolean(R.styleable.ExoVideoView_auto_show,
                         controllerAutoShow);
+                markViewer = a.getBoolean(R.styleable.ExoVideoView_enable_mark, true);
                 controllerBackgroundId = a.getResourceId(R.styleable.ExoVideoView_controller_background, 0);
             } finally {
                 a.recycle();
@@ -304,8 +321,8 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
         if (!useController || player == null || ev.getActionMasked() != MotionEvent.ACTION_DOWN) {
             return false;
         }
-        if (enableMultiQuality) {
-            View v = overlayFrameLayout.findViewById(R.id.exo_player_quality_container);
+        if (markViewer) {
+            View v = overlayFrameLayout.findViewById(R.id.exo_player_mark_container);
             if (v != null && overlayFrameLayout.getVisibility() == VISIBLE) {
                 return true;
             }
@@ -392,8 +409,17 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
         if (controller != null) {
             controller.setMediaSource(mediaSource);
         }
-
         playInternal(mediaSource, playWhenReady, where, creator);
+    }
+
+    //TODO: 이거 북마크에서만 고장남 왜인지 이유불명
+    public void seekTo(long positionMs) {
+        player.seekTo(positionMs);
+        Log.d("TAG", "seek To :" + positionMs);
+    }
+
+    public long getCurrentPosition() {
+        return player.getCurrentPosition();
     }
 
     public void pause() {
@@ -443,6 +469,19 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
 
         player.setPlayWhenReady(requestAudioFocus() && playWhenReady);
     }
+
+    public void addMarkToDoubleTap() {
+        final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                playerActivity = new PlayerActivity();
+                playerActivity.addMark(player.getCurrentPosition());
+                return true;
+            }
+        });
+        overlayFrameLayout.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
+    }
+
 
     private void createExoPlayer(MediaSourceCreator creator) {
         if (player != null) {
@@ -506,7 +545,6 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
         if (controller != null) {
             controller.setPortrait(portrait);
         }
-
     }
 
 
@@ -528,6 +566,19 @@ public class ExoVideoView extends FrameLayout implements ExoVideoPlaybackControl
     @Override
     public View attachVideoView() {
         return this;
+    }
+
+    @Override
+    public void onItemSelected(View v, SparseBooleanArray sparseBooleanArray) {}
+
+    @Override
+    public void clickItem(int id, String path) {
+
+    }
+
+    @Override
+    public void clickLongItem(View v, int id, String path) {
+
     }
 
 

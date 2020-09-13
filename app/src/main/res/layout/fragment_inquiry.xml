@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#454141">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_baseline_email_24"
+            />
+
+        <TextView
+            android:id="@+id/btnemail"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="문의 하기"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:textSize="40dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="버튼을 클릭해서 이메일로 문의가 가능합니다."
+            android:textColor="#FFFFFF"
+            android:textSize="18dp"/>
+    </LinearLayout>
+
+</LinearLayout>

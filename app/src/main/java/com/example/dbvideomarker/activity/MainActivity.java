@@ -10,15 +10,21 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.dbvideomarker.R;
+import com.example.dbvideomarker.activity.setting.SettingActivity;
 import com.example.dbvideomarker.adapter.ViewPagerAdapter;
+import com.example.dbvideomarker.database.entitiy.PlRel;
 import com.example.dbvideomarker.ui.mark.MarkFragment;
 import com.example.dbvideomarker.ui.home.HomeFragment;
 import com.example.dbvideomarker.ui.playlist.PlaylistFragment;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,13 +33,14 @@ public class MainActivity extends AppCompatActivity {
     MarkFragment markFragment;
     HomeFragment homeFragment;
     PlaylistFragment playlistFragment;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar); //툴바를 액션바(앱바)로 사용할 수 있는 메소드
 
         viewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -71,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
+    public void disableToolbar() {
+        toolbar.setVisibility(View.GONE);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
@@ -96,25 +107,24 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    private long backKeyPressedTime = 0;
+    private Toast toast;
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+    public void onBackPressed() {
+        //super.onBackPressed();
 
-            case R.id.select:
-                Toast.makeText(this, "1111", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.setting:
-//                Intent intent = new Intent(this, SettingActivity.class);
-//                //액티비티 시작!
-//                startActivity(intent);
-                break;
-            case R.id.menu_search:
-                Intent intentSearch = new Intent(getApplicationContext(), SearchActivity.class);
-                startActivity(intentSearch);
-                break;
+        if (System.currentTimeMillis() > backKeyPressedTime + 2500) {
+            backKeyPressedTime = System.currentTimeMillis();
+            toast = Toast.makeText(this, "뒤로 가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_LONG);
+            toast.show();
+            return;
         }
-        return true;
+
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2500) {
+            finish();
+            toast.cancel();
+        }
     }
-
-
 }
+

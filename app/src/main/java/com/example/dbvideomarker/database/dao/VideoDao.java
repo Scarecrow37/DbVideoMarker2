@@ -3,6 +3,7 @@ package com.example.dbvideomarker.database.dao;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
+import androidx.room.Entity;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -10,6 +11,7 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.dbvideomarker.database.entitiy.Media;
+import com.example.dbvideomarker.database.entitiy.PlRelVideo;
 import com.example.dbvideomarker.database.entitiy.Video;
 import com.example.dbvideomarker.database.entitiy.Mark;
 import java.util.List;
@@ -44,18 +46,25 @@ public interface VideoDao {
                      "CASE WHEN :sort = 3 THEN countMark END DESC")
     LiveData<List<Video>> findAllVideo (int sort);
 
-    @Query("SELECT * FROM Video ORDER BY contentID ASC")
+    @Query("SELECT * FROM Video ORDER BY contentId ASC")
     LiveData<List<Video>> findAllVideo ();
 
 //    @Query("SELECT * FROM Video WHERE vname LIKE + '%' + :vName + '%' ORDER BY vName")
 //    LiveData<List<Video>> searchVideo(String vName);
 
+//    @Query("SELECT Video.* " +
+//            "FROM VIDEO LEFT JOIN plrel on Video.contentId = plrel.plrel_vid " +
+//            "WHERE NOT plrel.plrel_pid = :pid OR plrel.plrel_pid is null")
+//    LiveData<List<Video>> selectVideo(int pid);
+
+
     @Insert(onConflict = IGNORE)
     long insertVideo(Video video);
 
-    @Update
-    int updateVideo(Video video);
+    @Query("UPDATE video SET vname = :name WHERE contentId = :id")
+    int updateVideo(int id, String name);
 
     @Query("DELETE FROM video WHERE contentID = :id")
     int deleteVideo(int id);
+
 }

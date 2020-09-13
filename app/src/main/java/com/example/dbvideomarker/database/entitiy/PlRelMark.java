@@ -19,6 +19,8 @@ public class PlRelMark {
     @ColumnInfo(name = "mark_mstart")
     public Long pm_mstart;
 
+    @ColumnInfo(name = "mark_mpath")
+    public String pm_mpath;
 
     public int getPm_pid() {
         return pm_pid;
@@ -58,5 +60,13 @@ public class PlRelMark {
 
     public void setPm_mstart(Long pm_mstart) {
         this.pm_mstart = pm_mstart;
+    }
+
+    public String getPm_mpath() {
+        return pm_mpath;
+    }
+
+    public void setPm_mpath(String pm_mpath) {
+        this.pm_mpath = pm_mpath;
     }
 }

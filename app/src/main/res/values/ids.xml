@@ -48,8 +48,9 @@
     <item name="exo_player_controller_back_landscape" type="id"/>
 
     <item name="exo_player_controller_add_playlist" type="id"/>
-    <item name="exo_player_controller_add_mark" type="id"/>
     <item name="exo_player_controller_add_playlist_landscape" type="id"/>
-    <item name="exo_player_controller_add_mark_landscape" type="id"/>
+    <item name="exo_player_controller_mark_landscape" type="id"/>
+
+    <item name="exo_player_mark_container" type="id"/>
 
 </resources>

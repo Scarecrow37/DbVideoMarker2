@@ -13,28 +13,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.RequestManager;
 import com.example.dbvideomarker.R;
 import com.example.dbvideomarker.database.entitiy.PlRelMark;
-import com.example.dbvideomarker.database.entitiy.PlRelVideo;
 import com.example.dbvideomarker.listener.OnItemClickListener;
+import com.example.dbvideomarker.listener.OnMarkClickListener;
 
 import java.util.List;
 
 public class PlayList_MarkAdapter extends RecyclerView.Adapter<PlayList_MarkAdapter.PLMViewHolder> {
 
-    private OnItemClickListener onItemClickListener;
+    private OnMarkClickListener onMarkClickListener;
     private List<PlRelMark> plRelMarkList;
     private LayoutInflater minflater;
     private RequestManager mRequestManager;
 
-    public PlayList_MarkAdapter(Context context, OnItemClickListener onItemClickListener, RequestManager requestManager) {
+    public PlayList_MarkAdapter(Context context, OnMarkClickListener onMarkClickListener, RequestManager requestManager) {
         minflater = LayoutInflater.from(context);
         mRequestManager = requestManager;
-        this.onItemClickListener = onItemClickListener;
+        this.onMarkClickListener = onMarkClickListener;
     }
 
     @NonNull
     @Override
     public PlayList_MarkAdapter.PLMViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = minflater.inflate(R.layout.playlistedit_mark_item,parent,false);
+        View view = minflater.inflate(R.layout.item_mark_playlist,parent,false);
         return new PLMViewHolder(view);
     }
 
@@ -48,16 +48,13 @@ public class PlayList_MarkAdapter extends RecyclerView.Adapter<PlayList_MarkAdap
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int id = current.getPm_vid();
-                    long start = current.getPm_mstart();
-                    onItemClickListener.clickMark(id, start);
+                    onMarkClickListener.clickMark(current.getPm_vid(), current.getPm_mstart(), current.getPm_mpath());
                 }
             });
             holder.view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    int mid = current.getPm_mid();
-                    onItemClickListener.clickLongMark(view, mid);
+                    onMarkClickListener.clickLongMark(view, current.getPm_mid(), current.getPm_mpath());
                     return false;
                 }
             });

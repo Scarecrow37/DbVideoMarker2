@@ -14,4 +14,5 @@
     <string name="volume_changing">volume:%1$d%%</string>
     <string name="brightness_changing">brightness:%1$d%%</string>
     <string name="player_error">player error:%1$d</string>
+    <string name="appVersion">1.0</string>
 </resources>

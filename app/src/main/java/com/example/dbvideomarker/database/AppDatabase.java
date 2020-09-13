@@ -16,7 +16,7 @@ import com.example.dbvideomarker.database.entitiy.PlRel;
 import com.example.dbvideomarker.database.entitiy.PlayList;
 import com.example.dbvideomarker.database.entitiy.Video;
 
-@Database(entities = {Video.class, PlayList.class, Mark.class, PlRel.class}, version = 249, exportSchema = false)
+@Database(entities = {Video.class, PlayList.class, Mark.class, PlRel.class}, version = 253, exportSchema = false)
 
 public abstract class AppDatabase extends RoomDatabase {
 

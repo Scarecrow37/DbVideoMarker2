@@ -65,7 +65,7 @@
 
         <attr name="controller_display_mode" />
         <attr name="controller_background" />
-        <attr name="enable_multi_quality" format="boolean" />
+        <attr name="enable_mark" format="boolean" />
         <attr name="enableGesture"/>
     </declare-styleable>
 

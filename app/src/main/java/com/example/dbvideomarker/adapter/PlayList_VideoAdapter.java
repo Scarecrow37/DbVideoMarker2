@@ -46,7 +46,7 @@ public class PlayList_VideoAdapter extends RecyclerView.Adapter<PlayList_VideoAd
     @NonNull
     @Override
     public PLEViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.playlistedit_video_item, parent, false);
+        View view = mInflater.inflate(R.layout.item_video_playlist, parent, false);
         return new PLEViewHolder(view);
     }
 
@@ -63,8 +63,7 @@ public class PlayList_VideoAdapter extends RecyclerView.Adapter<PlayList_VideoAd
             holder.view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    int pid = current.getPv_vid();
-                    onItemClickListener.clickLongItem(view, pid);
+                    onItemClickListener.clickLongItem(view, current.getPv_vid(), current.getPv_vpath());
                     return false;
                 }
             });
@@ -72,8 +71,7 @@ public class PlayList_VideoAdapter extends RecyclerView.Adapter<PlayList_VideoAd
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int pid = current.getPv_vid();
-                    onItemClickListener.clickItem(pid);
+                    onItemClickListener.clickItem(current.getPv_vid(), current.getPv_vpath());
                 }
             });
 

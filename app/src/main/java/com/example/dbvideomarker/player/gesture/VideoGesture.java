@@ -284,8 +284,8 @@ public class VideoGesture implements View.OnTouchListener {
         long length = player.getDuration();
         long time = player.getCurrentPosition();
 
-        // Size of the jump, 10 minutes max (600000), with a bi-cubic progression, for a 8cm gesture
-        int jump = (int) ((Math.signum(gesturesize) * ((600000 * Math.pow((gesturesize / 8), 4)) + 3000)) / coef);
+        // Size of the jump, 1 minutes max (60000), with a bi-cubic progression, for a 8cm gesture
+        int jump = (int) ((Math.signum(gesturesize) * ((60000 * Math.pow((gesturesize / 8), 4)) + 3000)) / coef);
 
         // Adjust the jump
         if ((jump > 0) && ((time + jump) > length)) {

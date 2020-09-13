@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
+
         android:theme="@style/AppTheme">
         <activity android:name=".activity.SearchActivity"></activity>
         <activity
@@ -19,14 +20,16 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.PlayListEditActivity" />
         <activity android:name=".activity.InfoActivity" />
-        <activity android:name=".activity.SelectVideoActivity" />
-        <activity android:name=".activity.SelectMarkActivity" />
+        <activity android:name=".activity.setting.SettingActivity"/>
+        <activity android:name=".activity.setting.PrivacyActivity"/>
+        <activity android:name=".activity.setting.LicenseActivity"/>
+        <activity android:name=".activity.SelectActivity" />
+        <activity android:name=".activity.setting.InquiryActivity"/>
         <activity
             android:name=".player.PlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"

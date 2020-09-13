@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground"
         android:contentDescription="@null"
+        android:scaleType ="centerInside"
         android:src="@drawable/ic_play_arrow_white_36dp" />
 
     <ImageButton
@@ -21,6 +22,7 @@
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground"
         android:contentDescription="@null"
+        android:scaleType ="centerInside"
         android:src="@drawable/ic_pause_white_36dp" />
 
     <TextView
@@ -62,6 +64,7 @@
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground"
         android:contentDescription="@null"
+        android:scaleType ="centerInside"
         android:src="@drawable/ic_fullscreen_white_36dp" />
 
 

@@ -42,30 +42,4 @@
         app:layout_constraintGuide_percent="0.50" />
 
 
-    <ImageButton
-        android:id="@id/exo_player_controller_add_mark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="16dp"
-        android:background="@null"
-        android:contentDescription="back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/exo_player_controller_add_playlist"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_bookmark_border_24" />
-
-    <ImageButton
-        android:id="@id/exo_player_controller_add_playlist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@null"
-        android:contentDescription="back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_playlist_add_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,39 +11,54 @@
     <com.example.dbvideomarker.player.ui.ExoVideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.5" />
+        android:layout_weight="1.5"
+        android:layout_height="0dp" />
 
-    <ScrollView
+    <FrameLayout
         android:id="@+id/wrapper"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2">
-        <LinearLayout
+
+        <ScrollView
             android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="동영상 상세정보들어갈 공간임" />
+
+
+                <Button
+                    android:id="@+id/bottom_sheet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="재생목록에 추가" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_getMark"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </LinearLayout>
+
+        </ScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add_mark"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="동영상 상세정보들어갈 공간임" />
-
-
-            <Button
-                android:id="@+id/bottom_sheet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="재생목록에 추가" />
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_getMark"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </androidx.recyclerview.widget.RecyclerView>
-        </LinearLayout>
-
-    </ScrollView>
+            android:layout_gravity="right|bottom"
+            android:layout_margin="16dp"
+            android:focusable="true"
+            android:src="@drawable/ic_baseline_add_24" />
+    </FrameLayout>
 </LinearLayout>

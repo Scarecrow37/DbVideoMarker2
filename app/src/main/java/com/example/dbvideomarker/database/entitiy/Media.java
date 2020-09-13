@@ -7,7 +7,7 @@ public class Media {
 
     private int resId;
     private String Name;
-    private String Dur;
+    private long Dur;
     private String Size;
     private String Mime;
     private String Added;
@@ -23,11 +23,11 @@ public class Media {
         Name = name;
     }
 
-    public String getDur() {
+    public long getDur() {
         return Dur;
     }
 
-    public void setDur(String dur) {
+    public void setDur(long dur) {
         Dur = dur;
     }
 

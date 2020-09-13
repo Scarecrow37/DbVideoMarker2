@@ -1,8 +1,13 @@
 package com.example.dbvideomarker.database.dao;
 
+import android.database.sqlite.SQLiteConstraintException;
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Entity;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -12,13 +17,15 @@ import com.example.dbvideomarker.database.entitiy.PlRelVideo;
 
 import java.util.List;
 
+import static androidx.room.OnConflictStrategy.IGNORE;
+
 @Dao
 public interface PlRelDao {
 
     @Query("SELECT * FROM plrel ORDER BY plrel_id")
     LiveData<List<PlRel>> findAllPlayListRelation();
 
-    @Query("SELECT video.contentId as video_id, video.vname as video_name , video.vdur as video_dur , video.vpath as video_path, " +
+    @Query("SELECT DISTINCT video.contentId as video_id, video.vname as video_name , video.vdur as video_dur , video.vpath as video_path, " +
             "plrel.plrel_pid as playlist_id FROM plrel " +
             "INNER JOIN video ON video.contentId = plrel.plrel_vid " +
             //"INNER JOIN playlist ON playlist.pid = plrel.plrel_pid " +
@@ -26,7 +33,7 @@ public interface PlRelDao {
     LiveData<List<PlRelVideo>> findVideoInPlayList(int pid);
 
 
-    @Query("SELECT mark.mid as mark_id, mark.vid as mark_vid, mark.mMemo as mark_mmemo, mark.mStart as mark_mstart, " +
+    @Query("SELECT DISTINCT mark.mid as mark_id, mark.vid as mark_vid, mark.mMemo as mark_mmemo, mark.mStart as mark_mstart, " +
             "plrel.plrel_pid as playlist_id FROM plrel " +
             "INNER JOIN mark ON mark.mid = plrel.plrel_mid " +
             //"INNER JOIN playlist ON playlist.pid = plrel.plrel_pid " +
@@ -40,7 +47,7 @@ public interface PlRelDao {
 //    LiveData<Integer> getVideoRowCount(int pid);
 
 
-    @Insert
+    @Insert(onConflict = IGNORE)
     long insertPlRel(PlRel plRel);
 
     @Update
@@ -62,4 +69,7 @@ public interface PlRelDao {
 //            "INNER JOIN video ON video.vid = plrel.plrel_vid " +
 //            "WHERE plrel_pid != :pid")
 //    LiveData<List<PlRelVideo>> getVideoOverlap(int pid);
+
 }
+
+

@@ -5,10 +5,10 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/add_to_playlist"
-        android:layout_width="wrap_content"
+        android:id="@+id/parse_pid"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="추가"/>
+        android:text="Button" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_playlist_bottom"

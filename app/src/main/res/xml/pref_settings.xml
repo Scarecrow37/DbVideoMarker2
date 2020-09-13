@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="파일 관리">
+        <PreferenceScreen
+            android:key="file_scan"
+            android:title="동영상 파일 스캔"
+            android:summary="모든 동영상 파일또는 동영상 형식의 파일을 스캔하여 목록에 추가합니다."/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="앱 정보">
+        <PreferenceScreen
+            android:key="inquiry"
+            android:title="1:1 고객 문의">
+        <intent android:targetPackage="com.example.dbvideomarker"
+            android:targetClass="com.example.dbvideomarker.activity.setting.InquiryActivity"/>
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="privacy"
+            android:title="개인 정보 처리 방침">
+            <intent android:targetPackage="com.example.dbvideomarker"
+                android:targetClass="com.example.dbvideomarker.activity.setting.PrivacyActivity"/>
+
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="open_licence"
+            android:title="오픈 라이센스 정보">
+            <intent android:targetPackage="com.example.dbvideomarker"
+                android:targetClass="com.example.dbvideomarker.activity.setting.LicenseActivity"/>
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="version"
+            android:title="버전 정보                                    0.0.1"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

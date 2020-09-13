@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/bookMarkSearch"
-        android:title="정보보기"/>
-    <item android:id="@+id/bookMarkModified"
-        android:title="수정"/>
-    <item android:id="@+id/bookMarkDelete"
-        android:title="삭제"/>
-</menu>

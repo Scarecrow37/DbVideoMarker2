@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,8 +16,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,12 +31,14 @@ import com.example.dbvideomarker.R;
 import com.example.dbvideomarker.activity.PlayListEditActivity;
 import com.example.dbvideomarker.activity.SearchActivity;
 import com.example.dbvideomarker.adapter.PlayListAdapter;
+import com.example.dbvideomarker.adapter.util.ViewCase;
 import com.example.dbvideomarker.listener.OnItemClickListener;
 import com.example.dbvideomarker.database.entitiy.PlayList;
+import com.example.dbvideomarker.listener.OnItemSelectedListener;
 
 import java.util.List;
 
-public class PlaylistFragment extends Fragment implements OnItemClickListener {
+public class PlaylistFragment extends Fragment implements OnItemClickListener, OnItemSelectedListener {
 
     private PlaylistViewModel playlistViewModel;
 
@@ -46,7 +51,7 @@ public class PlaylistFragment extends Fragment implements OnItemClickListener {
                 new DividerItemDecoration(recyclerView.getContext(),new LinearLayoutManager(getContext()).getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        PlayListAdapter adapter = new PlayListAdapter(context, this);
+        PlayListAdapter adapter = new PlayListAdapter(context, ViewCase.NORMAL, this, this);
 
 
         playlistViewModel = new ViewModelProvider(getActivity()).get(PlaylistViewModel.class);
@@ -78,11 +83,44 @@ public class PlaylistFragment extends Fragment implements OnItemClickListener {
     }
 
     @Override
-    public void clickLongItem(View v, int id) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.select:
+                Toast.makeText(getActivity(), "1111", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.setting:
+//                Intent intent = new Intent(this, SettingActivity.class);
+//                //액티비티 시작!
+//                startActivity(intent);
+                break;
+            case R.id.menu_search:
+                Intent intentSearch = new Intent(getActivity(), SearchActivity.class);
+                startActivity(intentSearch);
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void clickItem(int id, String path) {
+        Intent intent = new Intent(getContext(), PlayListEditActivity.class);
+        intent.putExtra("재생목록 번호", id);
+        getContext().startActivity(intent);
+    }
+
+    @Override
+    public void clickLongItem(View v, int id, String path) {
         PopupMenu popupMenu = new PopupMenu(getContext(),v);
         MenuInflater inflater = popupMenu.getMenuInflater();
         Menu menu = popupMenu.getMenu();
-        inflater.inflate(R.menu.menu_popup_video, menu);
+        inflater.inflate(R.menu.menu_popup_playlist, menu);
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -118,15 +156,7 @@ public class PlaylistFragment extends Fragment implements OnItemClickListener {
     }
 
     @Override
-    public void clickItem(int pid) {
-        Intent intent = new Intent(getContext(), PlayListEditActivity.class);
-        intent.putExtra("재생목록 번호", pid);
-        getContext().startActivity(intent);
+    public void onItemSelected(View v, SparseBooleanArray sparseBooleanArray) {
+
     }
-
-    @Override
-    public void clickMark(int id, long start) {}
-
-    @Override
-    public void clickLongMark(View v, int id) {}
 }

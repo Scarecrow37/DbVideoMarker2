@@ -18,7 +18,7 @@ public class Video {
     public String vname;
 
     @ColumnInfo(name = "vdur")
-    public String vdur;
+    public long vdur;
 
     @ColumnInfo(name = "vpath")
     public String vpath;
@@ -43,11 +43,11 @@ public class Video {
         this.vname = vname;
     }
 
-    public String getVdur() {
+    public long getVdur() {
         return vdur;
     }
 
-    public void setVdur(String vdur) {
+    public void setVdur(long vdur) {
         this.vdur = vdur;
     }
 

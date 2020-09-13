@@ -36,8 +36,8 @@ public interface MarkDao {
     @Insert
     long insertMark(Mark mark);
 
-    @Update
-    int updateMark(Mark mark);
+    @Query("UPDATE mark SET mMemo =:name WHERE mid = :id ")
+    int updateMark(int id, String name);
 
     @Query("DELETE FROM Mark WHERE mid = :mid")
     int deleteMark(int mid);

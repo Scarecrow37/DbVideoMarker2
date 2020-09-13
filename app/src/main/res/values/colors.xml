@@ -7,7 +7,7 @@
     <color name="colorToolbar">#2C2C2C</color>
     <color name="colorTablayout">#494949</color>
     <color name="colorToolbarEx">#212121</color>
-    <color name="colorText">#FFFFFF</color>
+    <color name="colorText">#3F51B5</color>
     <color name="default_playback_background">#3D000000</color>
 
     <color name="dark_mode_icon_color_single_tone">#99000000</color>

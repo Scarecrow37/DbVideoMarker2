@@ -30,10 +30,6 @@ public class PlayListEditRepository {
         return allPlRel;
     }
 
-//    public LiveData<List<PlRelVideo>> getVideoOverlap(int pid) {
-//        return plRelDao.getVideoOverlap(pid);
-//    }
-
     public LiveData<List<PlRelVideo>> findVideoInPlayList(int pid) {
         return plRelDao.findVideoInPlayList(pid);
     }

@@ -1,10 +1,14 @@
-package com.example.dbvideomarker.mediastore;
+package com.example.dbvideomarker.util;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.example.dbvideomarker.database.entitiy.Media;
 
@@ -16,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class MediaStoreLoader {
 
     private static int id;
+    private int MS_ONE_HOUR = 3600000;
     private static ArrayList<Integer> mediaIdList = new ArrayList<>();
 
     public static List<Media> getContent(Context context) {
@@ -27,7 +32,7 @@ public class MediaStoreLoader {
         Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         String projections[] = {
                 MediaStore.Video.Media._ID,
-                MediaStore.Video.Media.TITLE,
+                MediaStore.Video.Media.DISPLAY_NAME,
                 MediaStore.Video.Media.DURATION,
                 MediaStore.Video.Media.SIZE,
                 MediaStore.Video.Media.MIME_TYPE,
@@ -66,8 +71,7 @@ public class MediaStoreLoader {
                 data.setResId(id);
                 data.setName(name);
 
-                String readableDur = loader.getReadableDuration(millis);
-                data.setDur(readableDur);
+                data.setDur(millis);
 
                 String changedSize = loader.getReadableFileSize(size);
                 data.setSize(changedSize);
@@ -87,33 +91,21 @@ public class MediaStoreLoader {
         return mediaList;
     }
 
-    public static ArrayList<Integer> getIdArray(Context context) {
-
-        ContentResolver resolver = context.getContentResolver();
-
-        Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-        String projections[] = { MediaStore.Video.Media._ID };
-        Cursor c = resolver.query(uri, projections, null, null, null);
-        mediaIdList.clear();
-        if (c != null) {
-            while (c.moveToNext()) {
-                int index = c.getColumnIndex(projections[0]);
-                id = c.getInt(index);
-                mediaIdList.add(id);
-            }
-        }
-        c.close();
-        return mediaIdList;
-    }
-
     public String getReadableDuration(long millis) {
-        //TODO: 60분 미만이어도 00:00:00 로 표시되는 현상
-        String dur = String.format("%02d:%02d:%02d",
-                TimeUnit.MILLISECONDS.toHours(millis),
-                TimeUnit.MILLISECONDS.toMinutes(millis) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), // The change is in this line
-                TimeUnit.MILLISECONDS.toSeconds(millis) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+        String dur = null;
+        if(millis > MS_ONE_HOUR) {
+            dur = String.format("%02d:%02d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(millis),
+                    TimeUnit.MILLISECONDS.toMinutes(millis) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), // The change is in this line
+                    TimeUnit.MILLISECONDS.toSeconds(millis) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+        } else {
+            dur = String.format("%02d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes(millis),
+                    TimeUnit.MILLISECONDS.toSeconds(millis) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+        }
         return dur;
     }
 
@@ -126,9 +118,9 @@ public class MediaStoreLoader {
         float fileSize = 0;
         String suffix = KILOBYTES;
 
-        if(size > BYTES_IN_KILOBYTES) {
+        if (size > BYTES_IN_KILOBYTES) {
             fileSize = size / BYTES_IN_KILOBYTES;
-            if(fileSize > BYTES_IN_KILOBYTES) {
+            if (fileSize > BYTES_IN_KILOBYTES) {
                 fileSize = fileSize / BYTES_IN_KILOBYTES;
                 if (fileSize > BYTES_IN_KILOBYTES) {
                     fileSize = fileSize / BYTES_IN_KILOBYTES;
@@ -139,5 +131,38 @@ public class MediaStoreLoader {
             }
         }
         return String.valueOf(dec.format(fileSize) + suffix);
+    }
+
+    public Bitmap getThumbnail(String path, long where) {
+
+        Bitmap bitmap;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+
+        retriever.setDataSource(path);
+
+        bitmap = retriever.getFrameAtTime(where, MediaMetadataRetriever.OPTION_NEXT_SYNC);
+        Log.d("Thumb", "thmbnail picked at" + where);
+        retriever.release();
+        return bitmap;
+    }
+
+    //TODO: 30이상에서 문제가 발생할 수 있음
+    public void deleteFile(Context context, int id) {
+        String mSelection = MediaStore.Video.Media._ID + "=?";
+        String[] mSelectionsArgs = new String[] {String.valueOf(id)};
+        Uri contentUri = Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, String.valueOf(id));
+
+        ContentResolver contentResolver = context.getContentResolver();
+        contentResolver.delete(contentUri, mSelection, mSelectionsArgs);
+    }
+
+    //TODO: 30이상에서 문제가 발생할 수 있음
+    public void updateFile(Context context, int id, String text) {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Video.Media.DISPLAY_NAME, text);
+        Uri contentUri = Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, String.valueOf(id));
+
+        ContentResolver contentResolver = context.getContentResolver();
+        contentResolver.update(contentUri, values, null, null);
     }
 }

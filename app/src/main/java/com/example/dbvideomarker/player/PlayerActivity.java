@@ -15,36 +15,39 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.bumptech.glide.RequestManager;
 import com.example.dbvideomarker.R;
 import com.example.dbvideomarker.adapter.MarkAdapter;
 import com.example.dbvideomarker.adapter.util.ViewCase;
 import com.example.dbvideomarker.database.entitiy.Mark;
-import com.example.dbvideomarker.dialog.Player_BottomSheetDialog;
+import com.example.dbvideomarker.dialog.BottomSheetDialog;
 import com.example.dbvideomarker.listener.OnItemClickListener;
 import com.example.dbvideomarker.listener.OnItemSelectedListener;
+import com.example.dbvideomarker.listener.OnMarkClickListener;
 import com.example.dbvideomarker.player.media.SimpleMediaSource;
 import com.example.dbvideomarker.player.ui.ExoVideoPlaybackControlView;
 import com.example.dbvideomarker.player.ui.ExoVideoView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 import java.util.List;
 
 import static com.example.dbvideomarker.player.orientation.OnOrientationChangedListener.SENSOR_LANDSCAPE;
 import static com.example.dbvideomarker.player.orientation.OnOrientationChangedListener.SENSOR_PORTRAIT;
 
-public class PlayerActivity extends AppCompatActivity implements OnItemClickListener, OnItemSelectedListener {
+public class PlayerActivity extends AppCompatActivity implements OnItemClickListener, OnMarkClickListener, OnItemSelectedListener {
+
 
     private ExoVideoView videoView;
     private View wrapper;
@@ -52,8 +55,9 @@ public class PlayerActivity extends AppCompatActivity implements OnItemClickList
     private PlayerViewModel playerViewModel;
     private RequestManager mGlideRequestManager;
 
-    private int CONTENT_ID;
+    public static int CONTENT_ID;
     private long CONTENT_START;
+    private String CONTENT_PATH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,21 +65,27 @@ public class PlayerActivity extends AppCompatActivity implements OnItemClickList
         setContentView(R.layout.activity_simple_video_view);
         wrapper = findViewById(R.id.wrapper);
 
+        FloatingActionButton fab = findViewById(R.id.fab_add_mark);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addMark(videoView.getCurrentPosition());
+            }
+        });
+
         Intent intent = getIntent();
         CONTENT_ID = intent.getExtras().getInt("ContentID");
+        CONTENT_PATH = intent.getExtras().getString("Path");
         CONTENT_START = intent.getExtras().getLong("Start");
 
-        if (CONTENT_START == -1) {
-            initVideoView(String.valueOf(CONTENT_ID));
-            //player.setCurrentPosition(0);
-        } else {
-            initVideoView(String.valueOf(CONTENT_ID));
-            //player.setCurrentPosition(CONTENT_START);
-        }
+        videoView.seekTo(CONTENT_START);
+
 
         initVideoView(String.valueOf(CONTENT_ID));
+        Log.d("TAG", "start =" + CONTENT_START + "//" + CONTENT_ID);
         initBottomView();
     }
+
 
     private void initBottomView() {
         RecyclerView recyclerView = findViewById(R.id.rv_getMark);
@@ -95,7 +105,7 @@ public class PlayerActivity extends AppCompatActivity implements OnItemClickList
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Player_BottomSheetDialog playerBottomSheetDialog = new Player_BottomSheetDialog();
+                BottomSheetDialog playerBottomSheetDialog = new BottomSheetDialog();
                 playerBottomSheetDialog.show(getSupportFragmentManager(), "bottomSheetDialog");
             }
         });
@@ -115,6 +125,7 @@ public class PlayerActivity extends AppCompatActivity implements OnItemClickList
                     mark.setmMemo(mMemo.getText().toString());
                     mark.setmStart(position);
                     mark.setmAdded(System.currentTimeMillis());
+                    mark.setMpath(CONTENT_PATH);
 
                     playerViewModel.insertMark(mark);
                     videoView.resume();
@@ -123,6 +134,22 @@ public class PlayerActivity extends AppCompatActivity implements OnItemClickList
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public void seekToOnDoubleTap() {
+        //getWidthOfScreen();
+        final GestureDetector gestureDetector = new GestureDetector(this,
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onDoubleTap(MotionEvent e) {
+                        Long cur_pos = videoView.getCurrentPosition();
+                        Log.d("TAG", "onDoubleTap():  " + videoView.getCurrentPosition());
+                        addMark(cur_pos);
+                        videoView.resume();
+                        return true;
+                    }
+                });
+        videoView.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
     }
 
     private void initVideoView(String id) {
@@ -142,6 +169,7 @@ public class PlayerActivity extends AppCompatActivity implements OnItemClickList
                 changeToLandscape();
             }
         });
+        videoView.addMarkToDoubleTap();
 
         //SimpleMediaSource mediaSource = new SimpleMediaSource("http://vfx.mtime.cn/Video/2019/03/12/mp4/190312083533415853.mp4"); //동영상 URI
         Uri uri = Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);
@@ -150,9 +178,8 @@ public class PlayerActivity extends AppCompatActivity implements OnItemClickList
 
         videoView.setControllerDisplayMode(ExoVideoPlaybackControlView.CONTROLLER_MODE_ALL);
         videoView.play(mediaSource, false);
+        seekToOnDoubleTap();
     }
-
-
 
 
     private void changeToPortrait() {
@@ -231,18 +258,24 @@ public class PlayerActivity extends AppCompatActivity implements OnItemClickList
     }
 
     @Override
-    public void clickLongItem(View v, int id) {}
+    public void clickItem(int id, String path) {
+    }
 
     @Override
-    public void clickItem(int id) {}
+    public void clickLongItem(View v, int id, String path) {
+    }
 
     @Override
-    public void clickMark(int id, long start) {}
+    public void clickMark(int id, long start, String path) {
+        videoView.seekTo(start);
+    }
 
     @Override
-    public void clickLongMark(View v, int id) {}
+    public void clickLongMark(View v, int id, String path) {
+    }
 
     @Override
-    public void onItemSelected(View v, SparseBooleanArray sparseBooleanArray) {}
+    public void onItemSelected(View v, SparseBooleanArray sparseBooleanArray) {
+    }
 }
 

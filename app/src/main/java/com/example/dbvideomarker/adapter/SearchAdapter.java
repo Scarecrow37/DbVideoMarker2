@@ -82,7 +82,7 @@ public class SearchAdapter extends BaseExpandableListAdapter {
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         SearchItemList searchItemList = searchGroupListArrayList.get(i).getSearchItemLists().get(i1);
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.home_item,viewGroup,false);
+            view = LayoutInflater.from(context).inflate(R.layout.item_video,viewGroup,false);
         }
         ImageView thumb = (ImageView) view.findViewById(R.id.thumb);
         TextView vDur = (TextView) view.findViewById(R.id.vDur);

@@ -32,12 +32,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exo_player_progress_landscape"
+        android:scaleType ="centerInside"
         app:srcCompat="@drawable/ic_play_arrow_white_36dp">
 
         <ImageButton
             android:id="@id/exo_player_play_landscape"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/exo_controls_play_description"
             android:scaleType="centerInside"
@@ -45,8 +46,8 @@
 
         <ImageButton
             android:id="@id/exo_player_pause_landscape"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/exo_controls_pause_description"
             android:scaleType="centerInside"
@@ -74,6 +75,7 @@
         android:id="@id/exo_player_exit_fullscreen"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:scaleType ="centerInside"
         android:layout_marginStart="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:contentDescription="@null"
